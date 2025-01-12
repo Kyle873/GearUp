@@ -124,9 +124,9 @@ public class GameServerController : ControllerBase
         Log.Debug("{@Msg}", res);
         
         using var resMs = new MemoryStream();
+        res.Serialize(resMs);
         resMs.Position = 0;
         
-        res.Serialize(resMs);
         using var compressedResMs = new MemoryStream();
         using (var gzipStream = new GZipStream(compressedResMs, CompressionMode.Compress))
         {
