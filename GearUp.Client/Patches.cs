@@ -1,4 +1,5 @@
 ﻿using HarmonyLib;
+using IFix;
 using Il2CppInterop.Runtime.InteropTypes.Arrays;
 
 namespace GearUp.Client
@@ -27,6 +28,19 @@ namespace GearUp.Client
             Plugin.Log.LogInfo("URLString.GetPlat() override");
 
             __result = string.Format("https://localhost?q=gateway&v={0}", Const.GetScriptClientVersion());
+        }
+
+        [HarmonyPrefix, HarmonyPatch(typeof(WrappersManagerImpl), nameof(WrappersManagerImpl.IsPatched))]
+        public static bool WrappersManagerImpl_IsPatched_Prefix(int id, ref bool __result)
+        {
+            if (id == 1858)
+            {
+                Plugin.Log.LogInfo("IFix patch 1858 override to false");
+                __result = false;
+                return false;
+            }
+
+            return true;
         }
 
         /*[HarmonyPrefix, HarmonyPatch(typeof(DataTools), nameof(DataTools.GetLanguageString), [typeof(int)])]

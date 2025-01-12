@@ -113,6 +113,7 @@ namespace GearUp.GameServer.Controllers
             else
             {
                 Log.Warning("Unhandled Operation {Op}", req.OpCode);
+                res.ErrorCode = ErrorCode.ServerError;
             }
 
             Log.Debug("{@Msg}", res);
