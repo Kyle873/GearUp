@@ -1,3 +1,4 @@
+using GearUp.GameServer.Handlers;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Serilog;
 using Serilog.Events;
@@ -52,6 +53,8 @@ public static class GameServer
 
             app.MapControllers();
 
+            OperationHandlerFactory.RegisterHandlers();
+            
             app.Run();
         }
         catch (Exception ex)
