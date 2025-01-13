@@ -1,4 +1,5 @@
-﻿using GearUp.Common.Protocol;
+﻿using GearUp.Common.Database;
+using GearUp.Common.Protocol;
 using GearUp.GameServer.Handlers;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
@@ -8,7 +9,7 @@ namespace GearUp.GameServer.Controllers;
 
 [ApiController]
 [Route("gs")]
-public class GameServerController : ControllerBase
+public class GameServerController(DataStore dataStore, ILogger<GameServerController> logger) : ControllerBase
 {
     [HttpPut("{Op}")]
     public void RequestOp(string Op)
@@ -18,11 +19,15 @@ public class GameServerController : ControllerBase
 
         var req = Request.Body.Deserialize<RequestOperation>();
         var handler = OperationHandlerFactory.GetHandler(req.OpCode);
-        var res = handler?.Invoke(req) ?? OperationHandlerBase.CreateResponse(req);
+        var res = handler?.Invoke(req, new()
+        {
+            DataStore = dataStore,
+            Logger = logger
+        }) ?? OperationHandlerBase.CreateResponse(req);
 
         if (handler is null)
         {
-            Log.Warning("Unhandled Operation: {Op}", req.OpCode);
+            Log.Warning("Unhandled Operation {Op} : {@Data}", req.OpCode, req);
 
             // This will block the client and force implementations to be made. Comment out to push further, but with undefined behavior.
             res.ErrorCode = ErrorCode.ServerError;

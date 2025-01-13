@@ -1,3 +1,4 @@
+using GearUp.Common.Database;
 using GearUp.GameServer.Handlers;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Serilog;
@@ -43,6 +44,11 @@ public static class GameServer
 
             // Add services to the container.
             builder.Services.AddControllers();
+            builder.Services.AddSingleton<DataStore>(sp =>
+            {
+                return new(sp.GetRequiredService<ILogger<DataStore>>(), 
+                    Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Database/App.json"));
+            });
 
             var app = builder.Build();
 

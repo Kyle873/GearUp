@@ -1,34 +1,33 @@
-using GearUp.Common.Protocol;
+﻿using GearUp.Common.Protocol;
 
-namespace GearUp.GameServer.Handlers;
-
-public class PingHandler : OperationHandlerBase
+namespace GearUp.GameServer.Handlers.Groups
 {
-    [OperationHandler(OperationCode.Ping)]
-    public static ResponseOperation HandlePing(RequestOperation req)
+    public class UserGroup : OperationHandlerBase
     {
-        var res = CreateResponse(req);
-
-        res.ReturnCache.Add(DataTypes.ProtoPang, [new ProtoPang
+        [OperationHandler(OperationCode.Ping)]
+        public static ResponseOperation HandlePing(RequestOperation req, UserContext _)
         {
-            UserId = req.UserId,
-            ServerTime = DateTimeOffset.Now.ToUnixTimeMilliseconds(),
-            DelaySeconds = 25,
-            Timezone = 7
-        }]);
+            var res = CreateResponse(req);
 
-        return res;
-    }
-}
+            res.ReturnCache.Add(DataTypes.ProtoPang, [new ProtoPang
+            {
+                UserId = req.UserId,
+                ServerTime = DateTimeOffset.Now.ToUnixTimeMilliseconds(),
+                DelaySeconds = 25,
+                Timezone = 7
+            }]);
 
-public class LoginHandler : OperationHandlerBase
-{
-    [OperationHandler(OperationCode.Login)]
-    public static ResponseOperation HandleLogin(RequestOperation req)
-    {
-        var res = CreateResponse(req);
+            return res;
+        }
 
-        res.ReturnCache.Add(DataTypes.ProtoPlayer, [new ProtoPlayer()
+        [OperationHandler(OperationCode.Login)]
+        public static ResponseOperation HandleLogin(RequestOperation req, UserContext ctx)
+        {
+            ctx.Logger.LogDebug("Logging in with UserToken {Token}", req.UserToken);
+
+            var res = CreateResponse(req);
+
+            res.ReturnCache.Add(DataTypes.ProtoPlayer, [new ProtoPlayer()
             {
                 UserId = req.UserId,
                 Name = "Test",
@@ -55,7 +54,7 @@ public class LoginHandler : OperationHandlerBase
                 IsRepairCriticalPointStage = true,
                 IsRepairGirlQuality = true
             }]);
-        res.ReturnCache.Add(DataTypes.ProtoGirl, [new ProtoGirl()
+            res.ReturnCache.Add(DataTypes.ProtoGirl, [new ProtoGirl()
             {
                 UserId = req.UserId,
                 Id = 1,
@@ -74,13 +73,13 @@ public class LoginHandler : OperationHandlerBase
                 Energy = 1000,
                 GirlQualityType = GirlQualityType.SR
             }]);
-        res.ReturnCache.Add(DataTypes.ProtoItem, [new ProtoItem()
+            res.ReturnCache.Add(DataTypes.ProtoItem, [new ProtoItem()
             {
                 UserId = req.UserId,
                 Id = 17300142,
                 Num = 3
             }]);
-        res.ReturnCache.Add(DataTypes.ProtoStage, [new ProtoStage()
+            res.ReturnCache.Add(DataTypes.ProtoStage, [new ProtoStage()
             {
                 UserId = req.UserId,
                 Id = 1,
@@ -88,25 +87,26 @@ public class LoginHandler : OperationHandlerBase
                 Status = StageStatus.NoFighting,
                 CompleteCount = 1
             }]);
-        res.ReturnCache.Add(DataTypes.ProtoPang, [new ProtoPang()
+            res.ReturnCache.Add(DataTypes.ProtoPang, [new ProtoPang()
             {
                 UserId = req.UserId,
                 ServerTime = DateTimeOffset.Now.ToUnixTimeMilliseconds(),
                 DelaySeconds = 25,
                 Timezone = 7
             }]);
-        res.ReturnCache.Add(DataTypes.ProtoCG, [new ProtoCG()
+            res.ReturnCache.Add(DataTypes.ProtoCG, [new ProtoCG()
             {
                 UserId = req.UserId,
                 Id = 10001,
                 CreateTime = 1699518332261
             }]);
-        res.ReturnCache.Add(DataTypes.ProtoDailyFlag, [new ProtoDailyFlag()
+            res.ReturnCache.Add(DataTypes.ProtoDailyFlag, [new ProtoDailyFlag()
             {
                 UserId = req.UserId,
                 Id = 1,
             }]);
 
-        return res;
+            return res;
+        }
     }
 }

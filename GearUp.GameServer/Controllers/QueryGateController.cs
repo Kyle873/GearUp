@@ -1,18 +1,12 @@
-﻿using GearUp.GameServer.Models;
+﻿using GearUp.Common.Database;
+using GearUp.GameServer.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GearUp.GameServer.Controllers;
 
 [ApiController]
-public class QueryGateController : ControllerBase
+public class QueryGateController(ILogger<QueryGateController> logger, DataStore dataStore) : ControllerBase
 {
-    readonly ILogger logger;
-
-    public QueryGateController(ILogger<QueryGateController> logger)
-    {
-        this.logger = logger;
-    }
-
     [Route("/")]
     [HttpPost]
     [HttpGet]
@@ -65,7 +59,7 @@ public class QueryGateController : ControllerBase
                     Talk = ["https://localhost/talk/"],
                 });
             default:
-                logger.LogWarning($"Unhandled {nameof(GateServerQuery)} q={query}!");
+                logger.LogWarning("Unhandled {ControllerAction} q={Query}!", nameof(GateServerQuery), query);
                 break;
         }
 

@@ -4,7 +4,7 @@ using System.Reflection;
 
 namespace GearUp.GameServer.Handlers;
 
-public delegate ResponseOperation OperationHandlerDelegate(RequestOperation req);
+public delegate ResponseOperation OperationHandlerDelegate(RequestOperation req, UserContext userContext);
 
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
 public class OperationHandlerAttribute : Attribute

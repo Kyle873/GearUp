@@ -1,5 +1,6 @@
 ﻿using HarmonyLib;
 using IFix;
+using UnityEngine;
 
 namespace GearUp.Client;
 
@@ -11,22 +12,25 @@ class Patches
     {
         Plugin.Log.LogInfo("NetGameApiSdkArgsModel.Load() override");
 
+        var token = SHA.SHA1(SystemInfo.deviceUniqueIdentifier + Application.dataPath);
         __result = new NetGameApiSdkArgsModel()
         {
             ViewerId = "123",
             AccessToken = "456",
-            OnetimeToken = "789"
+            OnetimeToken = token
         };
 
         return false;
     }
 
-    [HarmonyPostfix, HarmonyPatch(typeof(URLString), nameof(URLString.GetPlat))]
-    public static void URLString_GetPlat_Postfix(ref string __result)
+    [HarmonyPrefix, HarmonyPatch(typeof(URLString), nameof(URLString.GetPlat))]
+    public static bool URLString_GetPlat_Prefix(ref string __result)
     {
         Plugin.Log.LogInfo("URLString.GetPlat() override");
 
         __result = $"https://localhost?q=gateway&v={Const.GetScriptClientVersion()}";
+
+        return false;
     }
 
     [HarmonyPrefix, HarmonyPatch(typeof(WrappersManagerImpl), nameof(WrappersManagerImpl.IsPatched))]
