@@ -52,15 +52,14 @@ public static class GameServer
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
-            app.UseHttpsRedirection();
+            // Configure the HTTP request pipeline
             app.UseAuthorization();
             app.UseSerilogRequestLogging();
 
             app.MapControllers();
 
             OperationHandlerFactory.RegisterHandlers();
-            
+
             app.Run();
         }
         catch (Exception ex)

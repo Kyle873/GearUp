@@ -1,11 +1,10 @@
-﻿using GearUp.Common.Database;
-using GearUp.GameServer.Models;
+﻿using GearUp.GameServer.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GearUp.GameServer.Controllers;
 
 [ApiController]
-public class QueryGateController(ILogger<QueryGateController> logger, DataStore dataStore) : ControllerBase
+public class QueryGateController(ILogger<QueryGateController> logger) : ControllerBase
 {
     [Route("/")]
     [HttpPost]
@@ -32,10 +31,11 @@ public class QueryGateController(ILogger<QueryGateController> logger, DataStore 
                     ResourceVer2 = 1470073
                 });
             case "login":
+                var loginToken = Request.Form["access_key"];
                 return Results.Json(new ServerListRsp()
                 {
-                    Antid = "deafbeef",
-                    Authtoken = "deadbeef",
+                    Antid = "0",
+                    Authtoken = loginToken.ToString(),
                     Roles = "1",
                     LastZone = 1,
                     Zones = new ServerListRsp.ServerData()
@@ -49,10 +49,11 @@ public class QueryGateController(ILogger<QueryGateController> logger, DataStore 
                     }.Serialize()
                 });
             case "play":
+                var playToken = Request.Form["authtoken"];
                 return Results.Json(new PlayRsp()
                 {
                     Uid = "1",
-                    Token = "deadbeef",
+                    Token = playToken.ToString(),
                     Timeout = 1123200,
                     Chatdelay = 5,
                     Gs = ["https://localhost/gs/"],

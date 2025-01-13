@@ -7,7 +7,6 @@ namespace GearUp.Common.Database
 {
     public class DataStore : IDisposable
     {
-        public SDKData SDK { get; set; } = new();
         public GameServerData GameServer { get; set; } = new();
 
         private readonly ILogger logger;

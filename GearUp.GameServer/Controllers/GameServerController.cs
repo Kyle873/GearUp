@@ -22,7 +22,8 @@ public class GameServerController(DataStore dataStore, ILogger<GameServerControl
         var res = handler?.Invoke(req, new()
         {
             DataStore = dataStore,
-            Logger = logger
+            Logger = logger,
+            Token = req.UserToken
         }) ?? OperationHandlerBase.CreateResponse(req);
 
         if (handler is null)

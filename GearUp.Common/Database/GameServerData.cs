@@ -10,5 +10,7 @@ namespace GearUp.Common.Database
         /// instead of some sort of "primary key"
         /// </summary>
         public Dictionary<string, ProtoPlayer> Players { get; set; } = [];
+        public long UserIdCounter { get; set; }
+        public Dictionary<long, List<ProtoGirl>> PlayerGirls { get; set; } = [];
     }
 }
